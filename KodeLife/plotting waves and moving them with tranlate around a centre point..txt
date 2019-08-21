@@ -1,0 +1,43 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#define PI 3.14159265359
+
+uniform vec2 resolution;
+uniform float time;
+uniform float inFloat1;
+
+
+mat2 rotate2d(float _angle){
+    return mat2(cos(_angle),-sin(_angle),
+                sin(_angle),cos(_angle));
+}
+
+float plot(vec2 st, float pct){
+  return  smoothstep( pct-0.2, pct, st.y) -
+          smoothstep( pct, pct+.2, st.y);
+}
+
+void main() {
+    vec2 st = gl_FragCoord.xy/resolution*4;
+    vec2 translate = vec2(0,sin(time));
+    st -= vec2(0.5);
+    st = rotate2d( sin(inFloat1)*PI ) * st;
+
+    float y1 = 2*(sin(st.x+time))+2;
+    float y2 = 2*(cos(st.x+time))+1;
+    float y3 = 2*(tan(st.x+time))+1;
+
+    vec3 color = vec3(y1);
+
+    float pcsin = plot(st, y1);
+    float pccos = plot(st, y2);
+    float pctan = plot(st, y3);
+
+    color = pcsin*vec3(0.0,1.0,0.0);
+    color += pccos*vec3(1.0,0,0.0);
+    color += pctan*vec3(0.5,0.1,1.0);
+    
+    gl_FragColor = vec4(color,1.0);
+}
