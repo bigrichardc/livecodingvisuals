@@ -1,0 +1,19 @@
+uniform vec2 resolution;
+uniform float time;
+
+void main(){
+    vec2 st = gl_FragCoord.xy/resolution.xy;
+    // central point on axis
+    float pct = distance(st, vec2(0.5));
+    float pcmove = distance(st, vec2(sin(time)+0.8));
+    
+    float cutoff = step(pct, 0.1*sin(time));
+    float cutoff1 = step(pcmove, 0.3);
+    
+    
+    vec3 color = vec3(cutoff);
+    color += vec3(cutoff1);
+    
+
+    gl_FragColor = vec4(color,1);
+}
